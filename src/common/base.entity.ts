@@ -12,6 +12,7 @@ export class BaseEntity {
   @CreateDateColumn({
     name: 'created_at',
     type: 'datetime',
+    precision: 0,
     default: () => 'NOW()',
   })
   createdAt: Date;
@@ -19,6 +20,7 @@ export class BaseEntity {
   @UpdateDateColumn({
     name: 'updated_at',
     type: 'datetime',
+    precision: 0,
     onUpdate: 'NOW()',
     default: () => 'NOW()',
   })
@@ -27,6 +29,7 @@ export class BaseEntity {
   @DeleteDateColumn({
     name: 'deleted_at',
     type: 'datetime',
+    precision: 0,
   })
   deletedAt: Date;
 }

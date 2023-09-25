@@ -7,14 +7,18 @@ export class User extends BaseEntity {
   @Column({
     name: 'username',
     type: 'varchar',
-    precision: 0,
   })
   username: string;
 
   @Column({
+    name: 'email',
+    type: 'varchar',
+  })
+  email: string;
+
+  @Column({
     name: 'password',
     type: 'varchar',
-    precision: 0,
   })
   password: string;
 }
