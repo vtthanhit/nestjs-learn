@@ -4,9 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 import config from './config/config';
 import { UserModule } from './modules/user/user.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -31,6 +33,29 @@ import { UserModule } from './modules/user/user.module';
         charset: 'utf8mb4_general_ci',
         supportBigNumbers: true,
         bigNumberStrings: false,
+      }),
+      inject: [ConfigService],
+    }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: configService.get('mail.host'),
+          auth: {
+            user: configService.get('mail.user'),
+            pass: configService.get('mail.password'),
+          },
+        },
+        defaults: {
+          from: `No Reply <${configService.get('mail.from')}>`,
+        },
+        template: {
+          dir: join(__dirname, 'src/mailer/templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
       }),
       inject: [ConfigService],
     }),
