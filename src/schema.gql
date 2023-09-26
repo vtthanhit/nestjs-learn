@@ -24,5 +24,6 @@ type Mutation {
 
 input RegisterUserDto {
   username: String!
+  email: String!
   password: String!
 }

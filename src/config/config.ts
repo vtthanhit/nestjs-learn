@@ -11,4 +11,10 @@ export default () => ({
     password: process.env.DATABASE_PW,
     db: process.env.DATABASE_DB,
   },
+  mail: {
+    host: process.env.MAIL_HOST,
+    user: process.env.MAIL_USER,
+    password: process.env.MAIL_PASSWORD,
+    from: process.env.MAIL_FROM,
+  },
 });
