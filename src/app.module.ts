@@ -7,6 +7,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import config from './config/config';
 import { UserModule } from './modules/user/user.module';
+import { MailModule } from './mailer/mail.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { UserModule } from './modules/user/user.module';
       }),
       inject: [ConfigService],
     }),
+    EventEmitterModule.forRoot(),
+    MailModule,
     UserModule,
   ],
 })
