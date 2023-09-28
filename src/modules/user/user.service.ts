@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Repository } from 'typeorm';
@@ -19,6 +19,12 @@ export class UserService {
   async register(registerUser: RegisterUserDto): Promise<User> {
     const { username, password, email } = registerUser;
     const hashPassword = bcrypt.hashSync(password, 10);
+
+    const findUser = await this.userRepo.findOneBy({ username });
+
+    if (findUser) {
+      throw new BadRequestException('User existed');
+    }
 
     const user = this.userRepo.create({
       username,

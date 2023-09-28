@@ -9,13 +9,22 @@ import config from './config/config';
 import { UserModule } from './modules/user/user.module';
 import { MailModule } from './mailer/mail.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { FormattedExecutionResult, GraphQLFormattedError } from 'graphql';
+import { formatGraphqlError, formatResponse } from './common/utils/format.util';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [config], isGlobal: true }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      useFactory: () => ({
+        autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+        context: ({ req, res }) => ({ req, res }),
+        stringifyResult: (response: FormattedExecutionResult) =>
+          formatResponse(response),
+        formatError: (error: GraphQLFormattedError) =>
+          formatGraphqlError(error),
+      }),
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
